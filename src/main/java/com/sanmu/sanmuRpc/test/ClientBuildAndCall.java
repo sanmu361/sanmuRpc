@@ -20,15 +20,14 @@ public class ClientBuildAndCall {
         };
 
         final TestInterface testInterface
-                = RpcClientProxyBuilder.create(TestInterface.class)
+                = (TestInterface)RpcClientProxyBuilder.create(TestInterface.class)
                 .timeout(0)
                 .threads(4)
                 .hook(hook)
                 .connect("127.0.0.1", 8765)
                 .build();
 
-        for(int i=0; i<10; i++)
-        {
+        for(int i=0; i<10; i++) {
             System.out.println("invoke result = " + testInterface.testMethod01());
         }
 

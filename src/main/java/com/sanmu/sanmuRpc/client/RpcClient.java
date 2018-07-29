@@ -56,7 +56,7 @@ public class RpcClient implements InvocationHandler {
         };
     }
 
-    public RpcFuture call(String methodName , Object ... args){
+    public RpcFuture call(String methodName ,  Object[] args){
         if(rpcInvokeHook == null){
             rpcInvokeHook.beforeInvoke(methodName,args);
         }
@@ -75,6 +75,8 @@ public class RpcClient implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+        System.out.println(method.getName());
         RpcFuture rpcFuture = call(method.getName(),args);
 
         Object result;
