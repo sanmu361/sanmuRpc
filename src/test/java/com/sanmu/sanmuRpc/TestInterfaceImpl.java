@@ -1,4 +1,4 @@
-package com.sanmu.sanmuRpc.test;
+package com.sanmu.sanmuRpc;
 
 public class TestInterfaceImpl implements TestInterface {
     @Override

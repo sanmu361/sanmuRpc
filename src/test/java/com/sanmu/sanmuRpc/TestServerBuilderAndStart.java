@@ -1,4 +1,4 @@
-package com.sanmu.sanmuRpc.test;
+package com.sanmu.sanmuRpc;
 
 import com.sanmu.sanmuRpc.aop.RpcInvokeHook;
 import com.sanmu.sanmuRpc.server.RpcServer;

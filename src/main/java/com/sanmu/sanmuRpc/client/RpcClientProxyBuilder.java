@@ -1,8 +1,6 @@
 package com.sanmu.sanmuRpc.client;
 
 import com.sanmu.sanmuRpc.aop.RpcInvokeHook;
-import com.sanmu.sanmuRpc.proxy.Person;
-import com.sanmu.sanmuRpc.test.TestInterface;
 
 import java.lang.reflect.Proxy;
 
@@ -53,8 +51,6 @@ public class RpcClientProxyBuilder {
             rpcClient.connect();
 
             return (T)Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, rpcClient);
-
-//            return  Proxy.newProxyInstance(clazz.getClassLoader(),new Class[]{clazz},rpcClient);
         }
         public RpcClientAsyncProxy buildAsyncProxy(){
             rpcClient = new RpcClient(timeoutMills, rpcInvokeHook, host, port, threads);
