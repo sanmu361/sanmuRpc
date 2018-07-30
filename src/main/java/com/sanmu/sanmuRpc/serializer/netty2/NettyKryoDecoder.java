@@ -1,4 +1,4 @@
-package com.sanmu.sanmuRpc.serializer.netty;
+package com.sanmu.sanmuRpc.serializer.netty2;
 
 //import com.sanmu.sanmuRpc.serializer.netty1.KryoSerializer;
 import com.sanmu.sanmuRpc.serializer.KryoUtils;
