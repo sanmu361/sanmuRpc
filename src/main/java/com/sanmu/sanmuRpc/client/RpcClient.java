@@ -3,8 +3,8 @@ package com.sanmu.sanmuRpc.client;
 import com.sanmu.sanmuRpc.aop.RpcInvokeHook;
 import com.sanmu.sanmuRpc.context.Request;
 import com.sanmu.sanmuRpc.future.RpcFuture;
-import com.sanmu.sanmuRpc.netty.NettyKryoDecoder;
-import com.sanmu.sanmuRpc.netty.NettyKryoEncoder;
+import com.sanmu.sanmuRpc.serializer.netty.NettyKryoDecoder;
+import com.sanmu.sanmuRpc.serializer.netty.NettyKryoEncoder;
 import com.sanmu.sanmuRpc.utils.InfoPrinter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -57,7 +57,7 @@ public class RpcClient implements InvocationHandler {
     }
 
     public RpcFuture call(String methodName ,  Object[] args){
-        if(rpcInvokeHook == null){
+        if(rpcInvokeHook != null){
             rpcInvokeHook.beforeInvoke(methodName,args);
         }
         RpcFuture rpcFuture = new RpcFuture();
@@ -76,7 +76,6 @@ public class RpcClient implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        System.out.println(method.getName());
         RpcFuture rpcFuture = call(method.getName(),args);
 
         Object result;
@@ -105,9 +104,9 @@ public class RpcClient implements InvocationHandler {
                         @Override
                         protected void initChannel(Channel ch) throws Exception
                         {
-                            ch.pipeline().addLast(new NettyKryoDecoder(),
-                                    new RpcClientDispatchHandler(rpcClientResponseHandler, rpcClientChannelInactiveListener),
-                                    new NettyKryoEncoder());
+                            ch.pipeline().addLast(new NettyKryoDecoder(),new NettyKryoEncoder(),
+                                    new RpcClientDispatchHandler(rpcClientResponseHandler, rpcClientChannelInactiveListener)
+                                    );
                         }
                     });
             bootstrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);

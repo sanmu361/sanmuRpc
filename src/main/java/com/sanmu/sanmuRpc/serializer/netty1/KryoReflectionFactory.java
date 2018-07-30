@@ -1,4 +1,4 @@
-package com.sanmu.sanmuRpc.serializer;
+package com.sanmu.sanmuRpc.serializer.netty1;
 
 import com.esotericsoftware.kryo.Serializer;
 import com.sanmu.sanmuRpc.context.Request;
@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 public class KryoReflectionFactory extends KryoReflectionFactorySupport{
 
-    public KryoReflectionFactory(){
+    public KryoReflectionFactory() {
         setRegistrationRequired(false);
         setReferences(true);
-        register(Request.class,new RequestSerializer());
+        register(Request.class, new RequestSerializer());
         register(Response.class, new ResponseSerializer());
         register(Arrays.asList("").getClass(), new ArraysAsListSerializer());
         register(Collections.EMPTY_LIST.getClass(), new CollectionsEmptyListSerializer());
@@ -34,10 +34,12 @@ public class KryoReflectionFactory extends KryoReflectionFactorySupport{
         SynchronizedCollectionsSerializer.registerSerializers(this);
     }
 
-    public Serializer<?> getDefaultSerializer(Class clazz){
-        if(EnumSet.class.isAssignableFrom(clazz)){
+    @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public Serializer<?> getDefaultSerializer(Class clazz)
+    {
+        if(EnumSet.class.isAssignableFrom(clazz))
             return new EnumSetSerializer();
-        }
 
         if(EnumMap.class.isAssignableFrom(clazz))
             return new EnumMapSerializer();

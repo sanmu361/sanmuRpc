@@ -20,8 +20,8 @@ public class RpcServerRequestHandlerRunnable implements Runnable {
 
     private RpcRequestWrapper rpcRequestWrapper;
 
-    private MethodAccess methodAccess;
     private String lastMethodName = "";
+
     private int lastMethodIndex;
 
 
@@ -31,7 +31,7 @@ public class RpcServerRequestHandlerRunnable implements Runnable {
         this.rpcInvokeHook = rpcInvokeHook;
         this.requestQueue = requestQueue;
 
-        methodAccess = MethodAccess.get(interfaceClass);
+//        methodAccess = MethodAccess.get(interfaceClass);
     }
 
     @Override
@@ -48,33 +48,39 @@ public class RpcServerRequestHandlerRunnable implements Runnable {
                     rpcInvokeHook.beforeInvoke(methodName, args);
 
                 Object result = null;
-                if(!methodName.equals(lastMethodName))
-                {
-                    lastMethodIndex = methodAccess.getIndex(methodName);
-                    lastMethodName = methodName;
+//                if(!methodName.equals(lastMethodName))
+//                {
+//                    lastMethodIndex = methodAccess.getIndex(methodName);
+//                    lastMethodName = methodName;
+//                }
+
+                Class[] argTypes = new Class[0];
+
+                if(args != null){
+                    argTypes = new Class[args.length];
+                    for(int i = 0; i < args.length; i++){
+                        argTypes[i] = args[i].getClass();
+                    }
                 }
 
-                result = methodAccess.invoke(serviceProvider, lastMethodIndex, args);
+
+                Method method = serviceProvider.getClass().getMethod(methodName,argTypes);
+
+                result = method.invoke(serviceProvider, args);
 
                 Channel channel = rpcRequestWrapper.getChannel();
-                Response rpcResponse = new Response();
-                rpcResponse.setId(rpcRequestWrapper.getId());
-                rpcResponse.setResult(result);
-                rpcResponse.setInvokeSuccess(true);
+                int id = rpcRequestWrapper.getId();
+                Response rpcResponse =new Response(id, result, true);
                 channel.writeAndFlush(rpcResponse);
 
                 if(rpcInvokeHook != null)
                     rpcInvokeHook.afterInvoke(methodName, args);
 
-
-
-
             } catch (Exception e) {
+                e.printStackTrace();
                 Channel channel = rpcRequestWrapper.getChannel();
-                Response rpcResponse = new Response();
-                rpcResponse.setId(rpcRequestWrapper.getId());
-                rpcResponse.setThrowable(e);
-                rpcResponse.setInvokeSuccess(false);
+                int id = rpcRequestWrapper.getId();
+                Response rpcResponse = new Response(id, e, false);
                 channel.writeAndFlush(rpcResponse);
 
             }

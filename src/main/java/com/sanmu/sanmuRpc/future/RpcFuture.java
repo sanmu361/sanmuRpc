@@ -43,19 +43,53 @@ public class RpcFuture {
         this.countDownLatch = countDownLatch;
     }
 
-    public void setResult(Object result) {
+    /**
+     * get result successfully
+     * @param result
+     */
+    public synchronized void setResult(Object result)
+    {
+        if(state != STATE_AWAIT)
+            throw new IllegalStateException("can not set result to a RpcFuture instance which has already get result " +
+                    "or throwable!");
+
         this.result = result;
+        state = STATE_SUCCESS;
+
+        if(rpcFutureListener != null)
+            rpcFutureListener.onResult(result);
+
+        countDownLatch.countDown();
     }
 
-    public void setThrowable(Throwable throwable) {
+    /**
+     * exception occur when invoke
+     * @param throwable
+     */
+    public synchronized void setThrowable(Throwable throwable)
+    {
+        if(state != STATE_AWAIT)
+            throw new IllegalStateException("can not set throwable to a RpcFuture instance which has already get result " +
+                    "or throwable!");
+
         this.throwable = throwable;
+        state = STATE_EXCEPTION;
+
+        if(rpcFutureListener != null)
+            rpcFutureListener.onException(throwable);
+
+        countDownLatch.countDown();
     }
 
     public void setState(int state) {
         this.state = state;
     }
 
-    public void setRpcFutureListener(RpcFutureListener rpcFutureListener) {
+    public synchronized void setRpcFutureListener(RpcFutureListener rpcFutureListener)
+    {
+        if(state != STATE_AWAIT)
+            throw new RuntimeException("unable to set listener to a RpcFuture which is done.");
+
         this.rpcFutureListener = rpcFutureListener;
     }
 

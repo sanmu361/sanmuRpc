@@ -1,6 +1,8 @@
 package com.sanmu.sanmuRpc.context;
 
-public class Request {
+import java.io.Serializable;
+
+public class Request implements Serializable{
 
     private int id;
     private String methodName;

@@ -1,9 +1,8 @@
 package com.sanmu.sanmuRpc.server;
 
 import com.sanmu.sanmuRpc.aop.RpcInvokeHook;
-import com.sanmu.sanmuRpc.context.Request;
-import com.sanmu.sanmuRpc.netty.NettyKryoDecoder;
-import com.sanmu.sanmuRpc.netty.NettyKryoEncoder;
+import com.sanmu.sanmuRpc.serializer.netty.NettyKryoDecoder;
+import com.sanmu.sanmuRpc.serializer.netty.NettyKryoEncoder;
 import com.sanmu.sanmuRpc.utils.InfoPrinter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -11,8 +10,6 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RpcServer {
 
@@ -52,8 +49,8 @@ public class RpcServer {
                         protected void initChannel(SocketChannel ch) throws Exception
                         {
                             ch.pipeline().addLast(new NettyKryoDecoder(),
-                                    new RpcServerDispatchHandler(rpcServerRequestHandler),
-                                    new NettyKryoEncoder());
+                                    new NettyKryoEncoder(),
+                                    new RpcServerDispatchHandler(rpcServerRequestHandler));
                         }
                     });
             bootstrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);

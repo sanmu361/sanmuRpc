@@ -1,10 +1,23 @@
 package com.sanmu.sanmuRpc.context;
 
-public class Response {
+import java.io.Serializable;
+
+public class Response implements Serializable {
     private int id;
     private Object result;
     private Throwable throwable;
     private boolean isInvokeSuccess;
+
+    public Response(int id, Object resultOrThrowable, boolean isInvokeSuccess)
+    {
+        this.id = id;
+        this.isInvokeSuccess = isInvokeSuccess;
+
+        if(isInvokeSuccess)
+            result = resultOrThrowable;
+        else
+            throwable = (Throwable)resultOrThrowable;
+    }
 
     public int getId() {
         return id;

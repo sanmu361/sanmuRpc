@@ -19,8 +19,8 @@ public class ClientBuildAndCall {
             }
         };
 
-        final TestInterface testInterface
-                = (TestInterface)RpcClientProxyBuilder.create(TestInterface.class)
+        TestInterface testInterface
+                = RpcClientProxyBuilder.create(TestInterface.class)
                 .timeout(0)
                 .threads(4)
                 .hook(hook)
@@ -28,7 +28,7 @@ public class ClientBuildAndCall {
                 .build();
 
         for(int i=0; i<10; i++) {
-            System.out.println("invoke result = " + testInterface.testMethod01());
+           System.out.println("result = " + testInterface.testMethod01() );
         }
 
     }

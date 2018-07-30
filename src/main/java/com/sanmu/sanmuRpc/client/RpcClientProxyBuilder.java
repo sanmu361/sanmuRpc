@@ -52,9 +52,7 @@ public class RpcClientProxyBuilder {
             rpcClient = new RpcClient(timeoutMills, rpcInvokeHook, host, port, threads);
             rpcClient.connect();
 
-            return (T) Proxy.newProxyInstance(clazz.getClassLoader(),
-                    new Class[]{clazz},
-                    rpcClient);
+            return (T)Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, rpcClient);
 
 //            return  Proxy.newProxyInstance(clazz.getClassLoader(),new Class[]{clazz},rpcClient);
         }

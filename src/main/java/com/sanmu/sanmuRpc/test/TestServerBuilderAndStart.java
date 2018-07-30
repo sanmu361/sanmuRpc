@@ -6,13 +6,6 @@ import com.sanmu.sanmuRpc.server.RpcServerBuilder;
 
 public class TestServerBuilderAndStart {
     public static void main(String[] args) {
-        TestInterface testInterface = new TestInterface()
-        {
-            public String testMethod01()
-            {
-                return "return from server";
-            }
-        };
 
         RpcInvokeHook hook = new RpcInvokeHook()
         {
@@ -29,7 +22,7 @@ public class TestServerBuilderAndStart {
 
         RpcServer rpcServer = RpcServerBuilder.create()
                 .serviceInterface(TestInterface.class)
-                .serviceProvider(testInterface)
+                .serviceProvider(new TestInterfaceImpl())
                 .threads(4)
                 .hook(hook)
                 .bind(8765)
